@@ -6,38 +6,31 @@ from pynput import keyboard
 import threading
 import time
 
-# Tuş durumlarını saklamak için bir set kullanıyoruz
 pressed_keys = set()
 
-# Tuş basma olaylarını dinleyen callback fonksiyonu
 def on_press(key):
     try:
-        # Sadece karakter tuşları için `.char` erişimi
         if hasattr(key, 'char'): 
             pressed_keys.add(key.char)
         else:
-            pressed_keys.add(key)  # Özel tuşları ekleyin
+            pressed_keys.add(key)
     except AttributeError:
-        pressed_keys.add(key)  # Hata durumunda tüm tuşları ekleyin
+        pressed_keys.add(key)
 
-# Tuş bırakma olaylarını dinleyen callback fonksiyonu
 def on_release(key):
     try:
-        # Sadece karakter tuşları için `.char` erişimi
         if hasattr(key, 'char'): 
             pressed_keys.remove(key.char)
         else:
-            pressed_keys.remove(key)  # Özel tuşları kaldırın
+            pressed_keys.remove(key)  
     except KeyError:
         try:
             pressed_keys.remove(key)
         except KeyError:
             pass
     if key == keyboard.Key.esc:
-        # ESC tuşuna basıldığında dinleyiciyi durdur
         return False
 
-# Bu fonksiyon, tuş kombinasyonlarını kontrol eder
 def control():
     global roll, pitch, yaw, speed, flap, brakesTorque
     roll_,pitch_,yaw_,speed_ = 0.0,0.0,0.0,0.0
