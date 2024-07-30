@@ -19,7 +19,7 @@ def send_data():
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             client_socket.connect((host, port_send))
-            # print("Kontrol bağlantısı kuruldu") 
+            print("[INFO] Control connection is established")
             while True:
                 try:
                     client_socket.send(data_send_str.encode('utf-8'))
@@ -41,7 +41,7 @@ def get_data():
     while True:
         try:
             client_socket, addr = server.accept()
-            # print("Veri Alım Bağlantısı Kuruldu.")
+            print("[INFO] Data connection is established")
             while True:
                 data = client_socket.recv(1024).decode('utf-8')
                 if not data:
