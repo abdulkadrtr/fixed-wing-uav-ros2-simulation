@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="uav_model">
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://uav_controller/model/robot.dae"/>
+      </geometry>
+      <origin rpy="-1.5708 0 1.5708" xyz="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://uav_controller/model/robot.dae"/>
+      </geometry>
+      <origin rpy="-1.5708 0 1.5708" xyz="0 0 0"/>
+    </collision>
+  </link>
+</robot>
