@@ -2,9 +2,12 @@ import rclpy
 from rclpy.node import Node
 from uav_info_msgs.msg import UavInfoMessage
 from uav_control_msgs.msg import UavControlMessage
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped
 import socket
 import time
 import threading
+import numpy as np
 
 host = '127.0.0.1'
 port_send = 14000
@@ -63,12 +66,32 @@ def get_data():
             # print("Client is disconnected")
 
 
+def euler_to_quaternion(euler):
+    roll = euler[0]
+    pitch = euler[1]
+    yaw = euler[2]
+    cy = np.cos(yaw * 0.5)
+    sy = np.sin(yaw * 0.5)
+    cp = np.cos(pitch * 0.5)
+    sp = np.sin(pitch * 0.5)
+    cr = np.cos(roll * 0.5)
+    sr = np.sin(roll * 0.5)
+    q = np.zeros(4)
+    q[0] = cy * cp * cr + sy * sp * sr
+    q[1] = cy * cp * sr - sy * sp * cr
+    q[2] = sy * cp * sr + cy * sp * cr
+    q[3] = sy * cp * cr - cy * sp * sr
+    return q
+
 class UAVController(Node):
     def __init__(self):
         super().__init__('uav_controller')
         self.subscription = self.create_subscription(UavControlMessage,'/uav_control',self.control_callback,10)
         self.publisher = self.create_publisher(UavInfoMessage, '/uav_info', 10)
+        self.path_publisher = self.create_publisher(Path, '/uav_path', 10)
         self.timer = self.create_timer(0.5, self.timer_callback)
+        self.path = []
+        self.path_msg = Path()
         threading.Thread(target=send_data).start()
         threading.Thread(target=get_data).start()
 
@@ -83,8 +106,24 @@ class UAVController(Node):
         msg.euler_z = euler_z
         msg.speed = speed_info
         self.publisher.publish(msg)
-
-
+        #for path visualization
+        pose_stamped = PoseStamped()
+        pose_stamped.header.stamp = self.get_clock().now().to_msg()
+        pose_stamped.header.frame_id = "map"
+        pose_stamped.pose.position.x = x_pose
+        pose_stamped.pose.position.y = y_pose
+        pose_stamped.pose.position.z = altitude
+        euler_angles_rad = np.deg2rad([euler_x, euler_y, euler_z])
+        q = euler_to_quaternion(euler_angles_rad)
+        pose_stamped.pose.orientation.x = q[0]
+        pose_stamped.pose.orientation.y = q[1]
+        pose_stamped.pose.orientation.z = q[2]
+        pose_stamped.pose.orientation.w = q[3]
+        self.path.append(pose_stamped)
+        self.path_msg.header.stamp = self.get_clock().now().to_msg()
+        self.path_msg.header.frame_id = "map"
+        self.path_msg.poses = self.path
+        self.path_publisher.publish(self.path_msg)
 
     def control_callback(self, msg):
         global data_send_str
