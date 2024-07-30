@@ -48,8 +48,8 @@ def get_data():
                     break
                 values = data.split(",")
                 x_pose = float(values[0])
-                y_pose = float(values[1])
-                altitude = float(values[2])
+                altitude = float(values[1])
+                y_pose = float(values[2])
                 euler_x = float(values[3])    
                 euler_y = float(values[4])
                 euler_z = float(values[5])
