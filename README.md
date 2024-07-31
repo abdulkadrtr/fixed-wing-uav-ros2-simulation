@@ -66,3 +66,7 @@ This command will also open an RVIZ2 screen, visualizing the path taken by the a
 3 - To control the UAV using the keyboard, run the keyboard control package:
 
 `ros2 run uav_keyboard_control uav_keyboard_control`
+
+## More
+
+To reset the simulation environment, you can use the `ctrl + c` key combination while on the simulation screen.
