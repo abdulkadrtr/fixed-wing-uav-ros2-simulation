@@ -7,7 +7,7 @@
 https://youtu.be/OdzIkL9VDmY?si=tY7iI35HB6NyqarO
 
 ## 
-This project is a simulation that uses Unity aircraft model physics and can be controlled via a ROS2 interface. A bridge has been configured between Unity and ROS2, allowing for the following control commands to be sent to the aircraft:
+This project is a simulation that uses Unity [aircraft model physics](https://github.com/gasgiant/Aircraft-Physics) and can be controlled via a ROS2 interface. A bridge has been configured between Unity and ROS2, allowing for the following control commands to be sent to the aircraft:
 
 - `roll`
 - `pitch`
@@ -53,7 +53,9 @@ The `uav_keyboard_control` package is designed for controlling the aircraft usin
 ## Setup Instructions
 Ensure you have `ROS2 Humble` installed on your Ubuntu system and open the `ros2_ws` directory to clone this repository. Then, follow these steps:
 
-1 - Download the simulation environment and start the `aircraft.x86_64` application. This will open the simulation environment.
+1 - [Download](https://drive.google.com/drive/folders/1Vs01aubhgjO15QiIdTZjCxT2dU8q7iDB?usp=sharing) the simulation environment and start the `aircraft.x86_64` application. This will open the simulation environment.
+
+
 
 2 - Run the following command to establish the bridge between ROS2 and Unity, and activate the control and information topics:
 
